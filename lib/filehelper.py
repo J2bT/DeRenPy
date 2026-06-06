@@ -3,6 +3,7 @@ from pathlib import Path
 import shutil
 
 from unrpa import UnRPA
+import unrpyc
 
 from lib.logger import Logger
 

@@ -8,6 +8,8 @@ from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
 from tqdm import tqdm
 
+# noinspection PyUnusedImports
+import lib.pathhack	# This MUST happen before importing lib.filehelper
 from lib.filehelper import FileHelper
 from lib.logger import Logger
 
