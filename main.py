@@ -136,7 +136,7 @@ def run_pull(args):
 			relative_path = file_path.relative_to(game_path)
 			target_path = dest_dir / relative_path
 
-			display_name = file_path.name[-16:].ljust(16)
+			display_name = file_path.name[-32:].ljust(32)
 			pbar.set_postfix_str(display_name, refresh=False)
 			FileHelper.copy_with_pbar(file_path, target_path, pbar)
 
