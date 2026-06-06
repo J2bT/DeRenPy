@@ -287,7 +287,9 @@ def main():
 		dest="files",
 		nargs="*",
 		metavar="rpyc_file",
-		help="File(s) to decompile; can be a directory (default: './03_Input_RPYC')"
+		help="File(s) to decompile. If the file is in ./03_Input_RPYC, path can be omitted. '.rpyc' can be omitted. "
+			 "Can be a directory (equivalent to passing all its .rpyc files). "
+			 "(default: './03_Input_RPYC')"
 	)
 	rpyc_deco.set_defaults(func=run_unrpyc)
 
