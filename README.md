@@ -14,7 +14,7 @@ If the repository was cloned non-recursively previously, use `git submodule upda
 ```bash
 cd DeRenPy
 # If you're on Windows, replace all mentions of `python3` with `py -3`!
-python3 -m venv venv
+python3 -m venv venv	# Optional, if you're fine with PyPI packages being installed globally on your system.
 python3 -m pip install -r requirements.txt
 ```
 
