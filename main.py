@@ -63,6 +63,7 @@ def run_unrpa(args):
 
 def run_unrpyc(args):
 	Logger.info(f"{args.command} is not ready yet, but it is coming soon(TM).")
+	Logger.info(f"All following messages are purely for debugging purposes.")
 
 
 def run_pull(args):
