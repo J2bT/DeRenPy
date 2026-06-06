@@ -1,4 +1,4 @@
-# DeRenPy [![License](https://img.shields.io/github/license/J2bT/DeRenPy.svg](https://github.com/J2bT/DeRenPy/blob/main/LICENSE)
+# DeRenPy [![License](https://img.shields.io/github/license/J2bT/DeRenPy.svg)](https://github.com/J2bT/DeRenPy/blob/main/LICENSE)
 
 A wrapper around "UnRPA" and "UnRPYC" open source utilities with a few other functions meant to speed up and simplify decompiling Ren'Py games.
 
