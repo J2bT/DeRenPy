@@ -231,6 +231,7 @@ def interact(args):
 		run_unrpa(args)
 
 	elif args.command == "unrpyc":
+		args.files = ["./03_Input_RPYC"]
 		run_unrpyc(args)
 
 	elif args.command == "pull":

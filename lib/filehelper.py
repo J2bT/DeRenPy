@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import shutil
 
+from tqdm import tqdm
 from unrpa import UnRPA
 import unrpyc
 
@@ -131,3 +132,12 @@ class FileHelper:
 					p.rmdir()  # Removes directory only if it is empty
 				except OSError:
 					pass  # Skip if directory is not empty
+
+	@staticmethod
+	def unrpyc_decompile(worklist):
+		with tqdm(total=len(worklist), unit="files") as pbar:
+			for p in worklist:
+				display_name = p.name[-32:].ljust(32)
+				pbar.set_postfix_str(display_name, refresh=False)
+				unrpyc.decompile_rpyc(p, unrpyc.Context())
+				pbar.update(1)
