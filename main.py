@@ -65,6 +65,41 @@ def run_unrpyc(args):
 	Logger.info(f"{args.command} is not ready yet, but it is coming soon(TM).")
 	Logger.info(f"All following messages are purely for debugging purposes.")
 
+	if len(args.files) == 0:
+		args.files.append("./03_Input_RPYC")
+
+	files_to_process = set()
+	for i in range(len(args.files)):
+		if os.path.isdir(args.files[i]):
+			files_to_process.update([f for f in Path(args.files[i]).rglob("*.rpyc") if f.is_file()])
+		else:
+			if os.path.isabs(args.files[i]):
+				if not os.path.isfile(args.files[i]):
+					if not os.path.isfile(args.files[i] + ".rpyc"):
+						Logger.error(f"No such file: “{args.files[i]}”.")
+						return
+					else:
+						args.files[i] = args.files[i] + ".rpyc"
+			else:	# Relative path
+				if not os.path.isfile(args.files[i]):
+					if not os.path.isfile(args.files[i] + ".rpyc"):
+						if not os.path.isfile("./03_Input_RPYC/" + args.files[i]):
+							if not os.path.isfile("./03_Input_RPYC/" + args.files[i] + ".rpyc"):
+								display_name = args.files[i] if args.files[i].endswith(".rpyc") else args.files[
+									                                                                    i] + ".rpyc"
+								Logger.error(f"No such file: “{display_name}”.")
+								return
+							else:  # Found the file in ./03_Input_RPYC (.rpyc was omitted)
+								args.files[i] = "./03_Input_RPYC/" + args.files[i] + ".rpyc"
+						else:  # Found the file in ./03_Input_RPYC
+							args.files[i] = "./03_Input_RPYC/" + args.files[i]
+					else:
+						args.files[i] = args.files[i] + ".rpyc"
+			files_to_process.add(Path(args.files[i]))
+
+	if len(files_to_process) == 0:
+		Logger.error(f"No files to process.")
+		return
 
 def run_pull(args):
 	# Get a Path object pointing to /game subfolder
