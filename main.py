@@ -8,7 +8,7 @@ from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
 from tqdm import tqdm
 
-from lib.checks import Checks
+from lib.misc import Misc
 from lib.filehelper import FileHelper
 from lib.logger import Logger
 
@@ -176,7 +176,7 @@ def interact(args):
 	if args.command == "unrpa":
 		rpa_list = FileHelper.rpa_list()
 
-		if not Checks.can_unrpa(rpa_list):
+		if not Misc.can_unrpa(rpa_list):
 			return
 
 		args.files = inquirer.checkbox(
