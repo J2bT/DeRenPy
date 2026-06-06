@@ -226,7 +226,7 @@ def interact(args):
 			validate=lambda result: len(result) >= 1,
 			invalid_message="select at least one item to decompress",
 			choices=rpa_list
-		).execute()
+		).execute() if len(rpa_list) > 1 else rpa_list
 
 		run_unrpa(args)
 
