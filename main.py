@@ -245,6 +245,12 @@ def main():
 
 	rpyc_deco = subparsers.add_parser(
 		"unrpyc", help="Run RPYC decompiler")
+	rpyc_deco.add_argument(
+		dest="files",
+		nargs="*",
+		metavar="rpyc_file",
+		help="File(s) to decompile; can be a directory (default: './03_Input_RPYC')"
+	)
 	rpyc_deco.set_defaults(func=run_unrpyc)
 
 	pull = subparsers.add_parser(
