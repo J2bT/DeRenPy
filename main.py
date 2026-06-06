@@ -62,7 +62,7 @@ def run_unrpa(args):
 
 
 def run_unrpyc(args):
-	Logger.info(f"{args.command} called.")
+	Logger.info(f"{args.command} is not ready yet, but it is coming soon(TM).")
 
 
 def run_pull(args):
