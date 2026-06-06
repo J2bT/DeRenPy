@@ -8,7 +8,6 @@ from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
 from tqdm import tqdm
 
-from lib.misc import Misc
 from lib.filehelper import FileHelper
 from lib.logger import Logger
 
@@ -100,6 +99,8 @@ def run_unrpyc(args):
 	if len(files_to_process) == 0:
 		Logger.error(f"No files to process.")
 		return
+
+	FileHelper.unrpyc_decompile(files_to_process)
 
 
 def run_pull(args):
@@ -213,7 +214,8 @@ def interact(args):
 	if args.command == "unrpa":
 		rpa_list = FileHelper.rpa_list()
 
-		if not Misc.can_unrpa(rpa_list):
+		if len(rpa_list) == 0:
+			Logger.error("No RPA files in the input directory. Pull them before selecting this option.")
 			return
 
 		args.files = inquirer.checkbox(
