@@ -101,6 +101,7 @@ def run_unrpyc(args):
 		Logger.error(f"No files to process.")
 		return
 
+
 def run_pull(args):
 	# Get a Path object pointing to /game subfolder
 	game_path = FileHelper.get_game_directory(args.game_path)
