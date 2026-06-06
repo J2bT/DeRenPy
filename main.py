@@ -63,9 +63,6 @@ def run_unrpa(args):
 
 
 def run_unrpyc(args):
-	Logger.info(f"{args.command} is not ready yet, but it is coming soon(TM).")
-	Logger.info(f"All following messages are purely for debugging purposes.")
-
 	if len(args.files) == 0:
 		args.files.append("./03_Input_RPYC")
 
