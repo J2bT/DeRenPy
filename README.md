@@ -40,7 +40,7 @@ DeRenPy has two modes of operation: interactive and pure CLI.
 If you have created a venv during installation, make sure it is active before trying to run the project!
 
 ## Interactive mode
-Just run the `main.py` file. (If this fails, run `python3 main.py` (Linux) or `py -3 main.py` (Windows) in your terminal of choice)
+Just run the `main.py` file. (If this fails, run `python3 main.py` (Linux) or `py -3 main.py` (Windows) in your terminal of choice.)
 
 If you did NOT create a venv during installation, just double-clicking on the file in your file explorer will likely work.
 
