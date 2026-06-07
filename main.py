@@ -66,6 +66,8 @@ def run_unrpyc(args):
 	if len(args.files) == 0:
 		args.files.append("./03_Input_RPYC")
 
+	args.files = [f.strip() for f in args.files]
+
 	files_to_process = set()
 	for i in range(len(args.files)):
 		if os.path.isdir(args.files[i]):
@@ -106,7 +108,7 @@ def run_unrpyc(args):
 
 def run_pull(args):
 	# Get a Path object pointing to /game subfolder
-	game_path = FileHelper.get_game_directory(args.game_path)
+	game_path = FileHelper.get_game_directory(args.game_path.strip())
 
 	if game_path is None:
 		return
@@ -240,7 +242,7 @@ def interact(args):
 			choices=["rpa", "rpyc", "rpy"],
 		).execute()
 
-		args.game_path = input("Input the path to the game folder: ").strip()
+		args.game_path = input("Input the path to the game folder: ")
 		if args.game_path == "":
 			Logger.error("No game path provided.")
 			pause()
