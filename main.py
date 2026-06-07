@@ -157,7 +157,7 @@ def run_move(args):
 
 	total_size = sum(f.stat().st_size for f in files_to_copy)
 
-	with tqdm(total=total_size, unit="iB", unit_scale=True, desc="Copying", unit_divisor=1024) as pbar:
+	with tqdm(total=total_size, unit="iB", unit_scale=True, desc="Moving", unit_divisor=1024) as pbar:
 		for file_path in files_to_copy:
 			relative_path = file_path.relative_to(src_dir)
 			dest_dir = Path("./03_Input_RPYC") if file_path.suffix == ".rpyc" else Path("./04_Output_RPYC")
