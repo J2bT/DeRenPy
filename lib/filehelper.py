@@ -141,3 +141,26 @@ class FileHelper:
 				pbar.set_postfix_str(display_name, refresh=False)
 				unrpyc.decompile_rpyc(p, unrpyc.Context())
 				pbar.update(1)
+
+	@staticmethod
+	def unrpyc_final_move():
+		src_dir = Path("./03_Input_RPYC")
+
+		files_to_copy = [f for f in src_dir.rglob("*.rpy") if f.is_file()]
+
+		if len(files_to_copy) == 0:
+			return
+
+		total_size = sum(f.stat().st_size for f in files_to_copy)
+
+		with tqdm(total=total_size, unit="iB", unit_scale=True, desc="Moving", unit_divisor=1024) as pbar:
+			for file_path in files_to_copy:
+				relative_path = file_path.relative_to(src_dir)
+				dest_dir = Path("./04_Output_RPYC")
+				target_path = dest_dir / relative_path
+
+				display_name = file_path.name[-32:].ljust(32)
+				pbar.set_postfix_str(display_name, refresh=False)
+				FileHelper.copy_with_pbar(file_path, target_path, pbar)
+
+				file_path.unlink()

@@ -79,7 +79,6 @@ DeRenPy has a usage guide built-in. Just run it with the `-h` flag. The examples
 main.py unrpa archive.rpa
 
 # Decompress a .rpyc compiled script. Output will be in the `04_Output_RPYC` folder.
-# THERE'S A BUG IN THE CURRENT VERSION CAUSING THE OUTPUT TO APPEAR IN THE SAME FOLDER AS THE INPUT FILE(S)! This will be fixed soon™.
 main.py unrpyc script.rpyc
 
 # Copy all .rpa files from the game to `01_Input_RPA`. Can also copy .rpyc (to `03_Input_RPYC`) or .rpy (to `04_Output_RPYC`)

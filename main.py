@@ -100,6 +100,8 @@ def run_unrpyc(args):
 		return
 
 	FileHelper.unrpyc_decompile(files_to_process)
+	Logger.info("Decompilation finished, moving decompiled files to the output folder.")
+	FileHelper.unrpyc_final_move()
 
 
 def run_pull(args):
