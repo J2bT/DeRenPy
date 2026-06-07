@@ -248,7 +248,7 @@ def interact(args):
 
 	elif args.command == "move":
 		args.file_type = inquirer.select(
-			message="Select which files to pull",
+			message="Select which files to move",
 			instruction="([\u2191\u2193]: Select Item)",
 			choices=["both", "rpyc", "rpy"],
 		).execute()
