@@ -35,7 +35,7 @@ pip install -r requirements.txt
 DeRenPy has two modes of operation: interactive and pure CLI.
 
 ### Interactive mode
-Just run `python3 main.py` (or `py -3 main.py` for Windows).
+Just run `python3 main.py` (or `py -3 main.py` for Windows). If you have created venv during installation, make sure it is active!
 
 ### Pure CLI mode
 Coming soon...
