@@ -2,6 +2,7 @@
 import argparse
 import os
 from pathlib import Path
+from sys import exit
 
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
