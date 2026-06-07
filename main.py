@@ -325,12 +325,10 @@ def main():
 	args = parser.parse_args()
 	FileHelper.makedirs()
 	if hasattr(args, 'func'):
-		#args.cli = True	# TODO: Remove if not needed.
 		args.func(args)
 	else:
 		while True:
 			args = argparse.Namespace()
-			#args.cli = False   # TODO: Remove if not needed.
 			interact(args)
 			pause()
 
