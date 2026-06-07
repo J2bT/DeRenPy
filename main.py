@@ -196,7 +196,7 @@ def interact(args):
 		message="Select an action",
 		instruction="([\u2191\u2193]: Select Item)",
 		choices=[
-			Choice(name="Run RPA decompiler", value="unrpa"),
+			Choice(name="Run RPA decompressor", value="unrpa"),
 			Choice(name="Run RPYC decompiler", value="unrpyc"),
 			Separator(),
 			Choice(name="Pull files from game folder", value="pull"),
@@ -262,7 +262,7 @@ def interact(args):
 
 def main():
 	parser = argparse.ArgumentParser(description='''
-	Ren'Py decompiler wrapper.
+	DeRenPy, a Ren'Py decompiler wrapper.
 	Use -h flag for help!''')
 
 	subparsers = parser.add_subparsers(title="command", dest='command')
