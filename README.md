@@ -12,10 +12,21 @@ Start by cloning the repository with `git clone --recursive https://github.com/J
 If the repository was cloned non-recursively previously, use `git submodule update --init` to clone the necessary submodules.
 
 ```bash
+# 1. Change into the directory you cloned this repository to
 cd DeRenPy
-# If you're on Windows, replace all mentions of `python3` with `py -3`!
-python3 -m venv venv	# Optional, if you're fine with PyPI packages being installed globally on your system.
-python3 -m pip install -r requirements.txt
+
+# IMPORTANT: If you're on Windows, replace all mentions of `python3` with `py -3`!
+
+# 2. Optional: Create and activate a virtualenv
+python3 -m venv venv
+# venv activation command differs depending on your OS/shell. DON'T run all of them.
+# If there is no command for you below, a quick search should solve the issue.
+source venv/bin/activate	# Bash
+venv\Scripts\Activate.ps1	# Windows PowerShell
+venv\Scripts\activate.bat	# Windows cmd.exe
+
+# 3. Install the dependencies.
+pip install -r requirements.txt
 ```
 
 ***
