@@ -44,6 +44,33 @@ Just run the `main.py` file. (If this fails, run `python3 main.py` (Linux) or `p
 
 If you did NOT create a venv during installation, just double-clicking on the file in your file explorer will likely work.
 
+Note that interactive mode can't do some stuff pure CLI mode can. You can do everything, but with more steps involved. For example, you won't be able to decompress any .rpa files that are not in the `01_Input_RPA` folder, so you'll have to pull them first.
+
+![main-menu](assets/main-menu.png)
+
+### Run RPA decompressor
+![unrpa-1](assets/unrpa-1.png)
+
+![unrpa-2](assets/unrpa-2.png)
+
+### Run RPYC decompiler
+![unrpyc-1](assets/unrpyc-1.png)
+
+### Pull files from game folder
+![pull-1](assets/pull-1.png)
+
+![pull-2](assets/pull-2.png)
+
+![pull-3](assets/pull-3.png)
+
+### Move scripts from ./02_Output_RPA to their respective folders
+![move-1](assets/move-1.png)
+
+![move-2](assets/move-2.png)
+
+### Clean all subfolders
+![clean-1](assets/clean-1.png)
+
 ## Pure CLI mode
 DeRenPy has a usage guide built-in. Just run it with the `-h` flag. The examples below do NOT showcase all of the features.
 
