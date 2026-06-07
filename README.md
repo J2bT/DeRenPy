@@ -15,7 +15,7 @@ If the repository was cloned non-recursively previously, use `git submodule upda
 # 1. Change into the directory you cloned this repository to
 cd DeRenPy
 
-# IMPORTANT: If you're on Windows, replace all mentions of `python3` with `py -3`!
+# IMPORTANT: If you're on Windows, replace `python3` with `py -3`!
 
 # 2. Optional: Create and activate a virtualenv
 python3 -m venv venv
@@ -27,6 +27,9 @@ venv\Scripts\activate.bat	# Windows cmd.exe
 
 # 3. Install the dependencies.
 pip install -r requirements.txt
+
+# 4. Linux-ONLY: make the `main.py` file executable
+chmod a+x main.py
 ```
 
 ***
