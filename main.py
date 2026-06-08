@@ -27,6 +27,7 @@ from sys import exit
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
+from InquirerPy.validator import PathValidator
 from tqdm import tqdm
 
 # noinspection PyUnusedImports
@@ -263,11 +264,11 @@ def interact(args):
 			choices=["rpa", "rpyc", "rpy"],
 		).execute()
 
-		args.game_path = input("Input the path to the game folder: ")
-		if args.game_path == "":
-			Logger.error("No game path provided.")
-			pause()
-			return
+		args.game_path = inquirer.filepath(
+			message="Input the path tho the game folder",
+			validate=PathValidator(is_dir=True, message="input is not a directory"),
+			only_directories=True,
+		).execute()
 
 		run_pull(args)
 
