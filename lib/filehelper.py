@@ -6,32 +6,44 @@ from tqdm import tqdm
 from unrpa import UnRPA
 import unrpyc
 
+from lib.extractor import Extractor
 from lib.logger import Logger
 
 
 class FileHelper:
+	"""Helper class containing all functions related to file handling."""
 
 	@staticmethod
-	def makedirs():
+	def makedirs() -> None:
+		"""Create all necessary directories."""
 		Path("./01_Input_RPA").mkdir(exist_ok=True)
 		Path("./02_Output_RPA").mkdir(exist_ok=True)
 		Path("./03_Input_RPYC").mkdir(exist_ok=True)
 		Path("./04_Output_RPYC").mkdir(exist_ok=True)
 
 	@staticmethod
-	def nukedirs():
+	def nukedirs() -> None:
+		"""Delete all directories created by `makedirs()`."""
 		shutil.rmtree("./01_Input_RPA")
 		shutil.rmtree("./02_Output_RPA")
 		shutil.rmtree("./03_Input_RPYC")
 		shutil.rmtree("./04_Output_RPYC")
 
 	@staticmethod
-	def rpa_list():
+	def rpa_list() -> list[str]:
+		"""Get a list of RPA files in the input directory."""
 		files = Path("./01_Input_RPA").glob("*.rpa")
 		return [f.name for f in files]
 
 	@staticmethod
 	def get_game_directory(user_input: str) -> Path | None:
+		"""Find the path to the `/game` subfolder of a Ren'Py game based on the user input.
+
+		:param user_input: string with a path to one of:
+			1. The root directory of a Ren'Py game
+			2. The `/game` subfolder of a Ren'Py game
+		:returns: a Path object to the `/game` subfolder or None if not found
+		"""
 		path = Path(user_input).resolve()
 
 		if not path.is_dir():
@@ -65,13 +77,20 @@ class FileHelper:
 		return None
 
 	@staticmethod
-	def copy_with_pbar(src: Path, dst: Path, pbar, buffer_size=1024):
+	def copy_with_pbar(src: Path, dst: Path, pbar: tqdm, block_size: int=1024) -> None:
+		"""Copy a file from src to dst while updating a progress bar.
+
+		:param src: source path
+		:param dst: destination path
+		:param pbar: progress bar
+		:param block_size: how many bytes to copy between progress bar updates
+		"""
 		dst.parent.mkdir(parents=True, exist_ok=True)
 
 		with open(src, 'rb') as fsrc:
 			with open(dst, 'wb') as fdst:
 				while True:
-					chunk = fsrc.read(buffer_size)
+					chunk = fsrc.read(block_size)
 					if not chunk:
 						break
 					fdst.write(chunk)
@@ -82,7 +101,12 @@ class FileHelper:
 
 
 	@staticmethod
-	def unrpa_generate_extractor(filename: str):
+	def unrpa_generate_extractor(filename: str) -> Extractor:
+		"""Get an extractor for an RPA archive.
+
+		:param filename: RPA file to generate the extractor for
+		:return: a dict with the extractor and supplementary data
+		"""
 		extractor = {"extractor": UnRPA(filename,0,"./02_Output_RPA",)}
 
 		extractor["version"] = extractor["extractor"].detect_version()
@@ -93,7 +117,13 @@ class FileHelper:
 		return extractor
 
 	@staticmethod
-	def unrpa_extract(extractor, pbar) -> bool:
+	def unrpa_extract(extractor: Extractor, pbar: tqdm) -> bool:
+		"""Extract an RPA archive.
+
+		:param extractor: dict with the extractor and supplementary data
+		:param pbar: progress bar
+		:return: True if extraction was successful, False otherwise
+		"""
 		if not Path(extractor["extractor"].path).is_dir():
 			Logger.error("Output directory does not exist or is not a directory.")
 			return False
@@ -124,6 +154,10 @@ class FileHelper:
 
 	@staticmethod
 	def remove_empty_dirs(root_path: Path) -> None:
+		"""Remove empty subfolders of a directory.
+
+		:param root_path: directory to remove empty subfolders from
+		"""
 		# glob('**') finds all subdirectories; sorted by length descending
 		# ensures we process deepest directories first.
 		for p in sorted(root_path.glob('**/*'), key=lambda x: len(str(x)), reverse=True):
@@ -134,7 +168,11 @@ class FileHelper:
 					pass  # Skip if directory is not empty
 
 	@staticmethod
-	def unrpyc_decompile(worklist):
+	def unrpyc_decompile(worklist: set[Path]) -> None:
+		"""Decompile an RPYC file.
+
+		:param worklist: RPYC files to decompile
+		"""
 		with tqdm(total=len(worklist), unit="files") as pbar:
 			for p in worklist:
 				display_name = p.name[-32:].ljust(32)
@@ -143,7 +181,9 @@ class FileHelper:
 				pbar.update(1)
 
 	@staticmethod
-	def unrpyc_final_move():
+	def unrpyc_final_move() -> None:
+		"""Move the decompiled files to the output directory."""
+
 		src_dir = Path("./03_Input_RPYC")
 
 		files_to_copy = [f for f in src_dir.rglob("*.rpy") if f.is_file()]

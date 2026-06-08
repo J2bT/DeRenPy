@@ -36,12 +36,18 @@ from lib.filehelper import FileHelper
 from lib.logger import Logger
 
 
-def pause():
+def pause() -> None:
+	"""Pause the application until Enter is pressed."""
 	Logger.info("Press Enter to return to the main menu.")
 	input()
 
 
-def run_unrpa(args):
+def run_unrpa(args: argparse.Namespace) -> None:
+	"""Unpack all RPA archives provided by the user.
+
+	Expects:
+		`args.files`: list of file paths (in strings)
+	"""
 	args.files = set(args.files)
 
 	args.files = [f.strip() for f in args.files]
@@ -84,7 +90,16 @@ def run_unrpa(args):
 				return
 
 
-def run_unrpyc(args):
+def run_unrpyc(args: argparse.Namespace) -> None:
+	"""Decompile all RPYC files provided by the user.
+
+	Expects:
+		`args.files`: one of:
+			- A list of paths (in strings) to one of:
+				- RPYC files to decompile
+				- A directory with RPYC files to decompile
+			- An empty list (will default to "['./03_Input_RPYC']")
+	"""
 	if len(args.files) == 0:
 		args.files.append("./03_Input_RPYC")
 
@@ -128,7 +143,18 @@ def run_unrpyc(args):
 	FileHelper.unrpyc_final_move()
 
 
-def run_pull(args):
+def run_pull(args: argparse.Namespace) -> None:
+	"""Copy game files of a specified type to the appropriate input/output folder.
+
+	Expects:
+		`args.game_path`: path (in a string) to one of:
+			- The root directory of a Ren'Py game
+			- `/game` subfolder of a Ren'Py game
+		`args.file_type`: one of:
+			- 'rpa'
+			- 'rpyc'
+			- 'rpy'
+	"""
 	# Get a Path object pointing to /game subfolder
 	game_path = FileHelper.get_game_directory(args.game_path.strip())
 
@@ -164,7 +190,15 @@ def run_pull(args):
 			FileHelper.copy_with_pbar(file_path, target_path, pbar)
 
 
-def run_move(args):
+def run_move(args: argparse.Namespace) -> None:
+	"""Move script files from the `02_Output_RPA` folder to their appropriate folder.
+
+	Expects:
+	 	`args.file_type`: one of:
+			- 'rpy'
+			- 'rpyc'
+			- 'both'
+	"""
 	if args.file_type == "both":
 		extensions = {".rpy", ".rpyc"}
 	else:
@@ -196,7 +230,12 @@ def run_move(args):
 	FileHelper.remove_empty_dirs(src_dir)
 
 
-def run_clean(args):
+def run_clean(args: argparse.Namespace) -> None:
+	"""Delete all files from the application's input/output directories.
+
+	Expects:
+		`args.assume_yes`: boolean value determining whether to prompt the user for confirmation
+	"""
 	if not args.assume_yes:
 		Logger.warning(
 			"You are about to delete all files in the following folders:\n"
@@ -215,7 +254,9 @@ def run_clean(args):
 	Logger.info("Clean finished.")
 
 
-def interact(args):
+def interact(args: argparse.Namespace) -> None:
+	"""Launch the interactive mode of the application."""
+
 	os.system("cls" if os.name == "nt" else "clear")
 
 	args.command = inquirer.select(
@@ -286,7 +327,9 @@ def interact(args):
 		run_clean(args)
 
 
-def main():
+def main() -> None:
+	"""Entry point of the application."""
+
 	parser = argparse.ArgumentParser(description='''
 	DeRenPy, a Ren'Py decompiler wrapper.
 	Use -h flag for help!''')
