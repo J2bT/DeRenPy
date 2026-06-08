@@ -265,7 +265,7 @@ def interact(args):
 		).execute()
 
 		args.game_path = inquirer.filepath(
-			message="Input the path tho the game folder",
+			message="Input the path to the game folder",
 			validate=PathValidator(is_dir=True, message="input is not a directory"),
 			only_directories=True,
 		).execute()
