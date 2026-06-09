@@ -48,35 +48,43 @@ def run_unrpa(args: argparse.Namespace) -> None:
 	Expects:
 		`args.files`: list of file paths (in strings)
 	"""
-	
+
 	args.files = set(args.files)
 
 	args.files = [f.strip() for f in args.files]
 
-	for i in range(len(args.files)):
-		if os.path.isabs(args.files[i]):
-			if not os.path.isfile(args.files[i]):
-				if not os.path.isfile(args.files[i] + ".rpa"):
-					Logger.error(f"No such file: “{args.files[i]}”.")
-					return
-				else:
-					args.files[i] = args.files[i] + ".rpa"
-		else:   # Relative path
-			if not os.path.isfile(args.files[i]):
-				if not os.path.isfile(args.files[i] + ".rpa"):
-					if not os.path.isfile("./01_Input_RPA/" + args.files[i]):
-						if not os.path.isfile("./01_Input_RPA/" + args.files[i] + ".rpa"):
-							display_name = args.files[i] if args.files[i].endswith(".rpa") else args.files[i] + ".rpa"
-							Logger.error(f"No such file: “{display_name}”.")
-							return
-						else:   # Found the file in ./01_Input_RPA (.rpa was omitted)
-							args.files[i] = "./01_Input_RPA/" + args.files[i] + ".rpa"
-					else:   # Found the file in ./01_Input_RPA
-						args.files[i] = "./01_Input_RPA/" + args.files[i]
-				else:
-					args.files[i] = args.files[i] + ".rpa"
+	files_to_process = set()
+	for path in args.files:
+		input_path = Path(path)
 
-	extractors = [FileHelper.unrpa_generate_extractor(filename) for filename in args.files]
+		if input_path.is_absolute():
+			candidates = [
+				input_path,
+				input_path.with_suffix(".rpa")
+			]
+		else:	# Relative path
+			base_dir = Path("./01_Input_RPA")
+			candidates = [
+				input_path,
+				input_path.with_suffix(".rpa"),
+				base_dir / input_path,
+				base_dir / input_path.with_suffix(".rpa")
+			]
+
+		resolved_file = None
+		for candidate in candidates:
+			if candidate.is_file():
+				resolved_file = candidate.resolve()
+				break
+
+		if resolved_file:
+			files_to_process.add(resolved_file)
+		else:
+			display_name = path if path.endswith(".rpa") else path + ".rpa"
+			Logger.error(f"No such file: '{display_name}'.")
+			return
+
+	extractors = [FileHelper.unrpa_generate_extractor(str(filename)) for filename in files_to_process]
 
 	total_files = 0
 
