@@ -48,39 +48,45 @@ def run_unrpa(args: argparse.Namespace) -> None:
 	Expects:
 		`args.files`: list of file paths (in strings)
 	"""
+
 	args.files = set(args.files)
 
 	args.files = [f.strip() for f in args.files]
 
-	for i in range(len(args.files)):
-		if os.path.isabs(args.files[i]):
-			if not os.path.isfile(args.files[i]):
-				if not os.path.isfile(args.files[i] + ".rpa"):
-					Logger.error(f"No such file: “{args.files[i]}”.")
-					return
-				else:
-					args.files[i] = args.files[i] + ".rpa"
-		else:   # Relative path
-			if not os.path.isfile(args.files[i]):
-				if not os.path.isfile(args.files[i] + ".rpa"):
-					if not os.path.isfile("./01_Input_RPA/" + args.files[i]):
-						if not os.path.isfile("./01_Input_RPA/" + args.files[i] + ".rpa"):
-							display_name = args.files[i] if args.files[i].endswith(".rpa") else args.files[i] + ".rpa"
-							Logger.error(f"No such file: “{display_name}”.")
-							return
-						else:   # Found the file in ./01_Input_RPA (.rpa was omitted)
-							args.files[i] = "./01_Input_RPA/" + args.files[i] + ".rpa"
-					else:   # Found the file in ./01_Input_RPA
-						args.files[i] = "./01_Input_RPA/" + args.files[i]
-				else:
-					args.files[i] = args.files[i] + ".rpa"
+	files_to_process = set()
+	for path in args.files:
+		input_path = Path(path)
 
-	extractors = [FileHelper.unrpa_generate_extractor(filename) for filename in args.files]
+		if input_path.is_absolute():
+			candidates = [
+				input_path,
+				input_path.with_suffix(".rpa")
+			]
+		else:	# Relative path
+			base_dir = Path("./01_Input_RPA")
+			candidates = [
+				input_path,
+				input_path.with_suffix(".rpa"),
+				base_dir / input_path,
+				base_dir / input_path.with_suffix(".rpa")
+			]
 
-	total_files = 0
+		resolved_file = None
+		for candidate in candidates:
+			if candidate.is_file():
+				resolved_file = candidate.resolve()
+				break
 
-	for extractor in extractors:
-		total_files += extractor["total_files"]
+		if resolved_file:
+			files_to_process.add(resolved_file)
+		else:
+			display_name = path if path.endswith(".rpa") else path + ".rpa"
+			Logger.error(f"No such file: '{display_name}'.")
+			return
+
+	extractors = [FileHelper.unrpa_generate_extractor(str(filename)) for filename in files_to_process]
+
+	total_files = sum(extractor["total_files"] for extractor in extractors)
 
 	with tqdm(total=total_files, unit="files") as pbar:
 		for extractor in extractors:
@@ -100,47 +106,64 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 				- A directory with RPYC files to decompile
 			- An empty list (will default to "['./03_Input_RPYC']")
 	"""
+
 	if len(args.files) == 0:
 		args.files.append("./03_Input_RPYC")
 
 	args.files = [f.strip() for f in args.files]
 
-	files_to_process = set()
-	for i in range(len(args.files)):
-		if os.path.isdir(args.files[i]):
-			files_to_process.update([f for f in Path(args.files[i]).rglob("*.rpyc") if f.is_file()])
+	files_to_process = {}
+	for path in args.files:
+		input_path = Path(path)
+
+		# Case 1: Input is a Directory
+		if input_path.is_dir():
+			for f in input_path.rglob("*.rpyc"):
+				if f.is_file():
+					files_to_process[f.resolve()] = input_path.resolve()
+			continue
+
+		# Case 2: Input is a File
+		candidates = [
+			input_path,
+			input_path.with_suffix(".rpyc"),
+			Path("./03_Input_RPYC") / input_path,
+			Path("./03_Input_RPYC") / input_path.with_suffix(".rpyc")
+		]
+
+		resolved_file = None
+		for candidate in candidates:
+			if candidate.is_file():
+				resolved_file = candidate.resolve()
+				break
+
+		if resolved_file:
+			files_to_process[resolved_file] = input_path.parent
 		else:
-			if os.path.isabs(args.files[i]):
-				if not os.path.isfile(args.files[i]):
-					if not os.path.isfile(args.files[i] + ".rpyc"):
-						Logger.error(f"No such file: “{args.files[i]}”.")
-						return
-					else:
-						args.files[i] = args.files[i] + ".rpyc"
-			else:	# Relative path
-				if not os.path.isfile(args.files[i]):
-					if not os.path.isfile(args.files[i] + ".rpyc"):
-						if not os.path.isfile("./03_Input_RPYC/" + args.files[i]):
-							if not os.path.isfile("./03_Input_RPYC/" + args.files[i] + ".rpyc"):
-								display_name = args.files[i] if args.files[i].endswith(".rpyc") else args.files[
-									                                                                    i] + ".rpyc"
-								Logger.error(f"No such file: “{display_name}”.")
-								return
-							else:  # Found the file in ./03_Input_RPYC (.rpyc was omitted)
-								args.files[i] = "./03_Input_RPYC/" + args.files[i] + ".rpyc"
-						else:  # Found the file in ./03_Input_RPYC
-							args.files[i] = "./03_Input_RPYC/" + args.files[i]
-					else:
-						args.files[i] = args.files[i] + ".rpyc"
-			files_to_process.add(Path(args.files[i]))
+			display_name = path if path.endswith(".rpyc") else path + ".rpyc"
+			Logger.error(f"No such file: '{display_name}'.")
+			return
 
 	if len(files_to_process) == 0:
 		Logger.error(f"No files to process.")
 		return
 
-	FileHelper.unrpyc_decompile(files_to_process)
+	with tqdm(total=len(files_to_process), unit="files") as pbar:
+		for file_path in files_to_process.keys():
+			FileHelper.unrpyc_decompile(file_path, pbar)
+
 	Logger.info("Decompilation finished, moving decompiled files to the output folder.")
-	FileHelper.unrpyc_final_move()
+
+	files_to_process = {file_path.with_suffix(".rpy"): source_dir for file_path, source_dir in files_to_process.items()}
+
+	total_size = sum(f.stat().st_size for f in files_to_process.keys())
+	with tqdm(total=total_size, unit="iB", unit_scale=True, desc="Moving", unit_divisor=1024) as pbar:
+		for file_path, source_dir in files_to_process.items():
+			if not file_path.exists():
+				Logger.warning(f"File does not exist: {file_path}, skipping...")
+				return
+
+			FileHelper.unrpyc_final_move(file_path, source_dir, pbar)
 
 
 def run_pull(args: argparse.Namespace) -> None:
@@ -155,6 +178,7 @@ def run_pull(args: argparse.Namespace) -> None:
 			- 'rpyc'
 			- 'rpy'
 	"""
+
 	# Get a Path object pointing to /game subfolder
 	game_path = FileHelper.get_game_directory(args.game_path.strip())
 
@@ -199,6 +223,7 @@ def run_move(args: argparse.Namespace) -> None:
 			- 'rpyc'
 			- 'both'
 	"""
+
 	if args.file_type == "both":
 		extensions = {".rpy", ".rpyc"}
 	else:
@@ -236,6 +261,7 @@ def run_clean(args: argparse.Namespace) -> None:
 	Expects:
 		`args.assume_yes`: boolean value determining whether to prompt the user for confirmation
 	"""
+
 	if not args.assume_yes:
 		Logger.warning(
 			"You are about to delete all files in the following folders:\n"

@@ -44,6 +44,7 @@ class FileHelper:
 			2. The `/game` subfolder of a Ren'Py game
 		:returns: a Path object to the `/game` subfolder or None if not found
 		"""
+
 		path = Path(user_input).resolve()
 
 		if not path.is_dir():
@@ -85,6 +86,7 @@ class FileHelper:
 		:param pbar: progress bar
 		:param block_size: how many bytes to copy between progress bar updates
 		"""
+
 		dst.parent.mkdir(parents=True, exist_ok=True)
 
 		with open(src, 'rb') as fsrc:
@@ -107,6 +109,7 @@ class FileHelper:
 		:param filename: RPA file to generate the extractor for
 		:return: a dict with the extractor and supplementary data
 		"""
+
 		extractor = {"extractor": UnRPA(filename,0,"./02_Output_RPA",)}
 
 		extractor["version"] = extractor["extractor"].detect_version()
@@ -124,6 +127,7 @@ class FileHelper:
 		:param pbar: progress bar
 		:return: True if extraction was successful, False otherwise
 		"""
+
 		if not Path(extractor["extractor"].path).is_dir():
 			Logger.error("Output directory does not exist or is not a directory.")
 			return False
@@ -158,6 +162,7 @@ class FileHelper:
 
 		:param root_path: directory to remove empty subfolders from
 		"""
+
 		# glob('**') finds all subdirectories; sorted by length descending
 		# ensures we process deepest directories first.
 		for p in sorted(root_path.glob('**/*'), key=lambda x: len(str(x)), reverse=True):
@@ -168,39 +173,33 @@ class FileHelper:
 					pass  # Skip if directory is not empty
 
 	@staticmethod
-	def unrpyc_decompile(worklist: set[Path]) -> None:
-		"""Decompile an RPYC file.
+	def unrpyc_decompile(file: Path, pbar: tqdm) -> None:
+		"""Decompile an RPYC file and update a progress bar.
 
-		:param worklist: RPYC files to decompile
+		:param file: RPYC file to decompile
+		:param pbar: progress bar
 		"""
-		with tqdm(total=len(worklist), unit="files") as pbar:
-			for p in worklist:
-				display_name = p.name[-32:].ljust(32)
-				pbar.set_postfix_str(display_name, refresh=False)
-				unrpyc.decompile_rpyc(p, unrpyc.Context())
-				pbar.update(1)
+
+		display_name = file.name[-32:].ljust(32)
+		pbar.set_postfix_str(display_name, refresh=False)
+		unrpyc.decompile_rpyc(file, unrpyc.Context())
+		pbar.update(1)
 
 	@staticmethod
-	def unrpyc_final_move() -> None:
-		"""Move the decompiled files to the output directory."""
+	def unrpyc_final_move(file_path: Path, root_dir: Path, pbar: tqdm) -> None:
+		"""Move the decompiled files to the output directory.
 
-		src_dir = Path("./03_Input_RPYC")
+		:param file_path: RPY file to move
+		:param root_dir: root for constructing a relative path in the output directory
+		:param pbar: progress bar
+		"""
 
-		files_to_copy = [f for f in src_dir.rglob("*.rpy") if f.is_file()]
+		relative_path = file_path.relative_to(root_dir)
+		dest_dir = Path("./04_Output_RPYC")
+		target_path = dest_dir / relative_path
 
-		if len(files_to_copy) == 0:
-			return
+		display_name = file_path.name[-32:].ljust(32)
+		pbar.set_postfix_str(display_name, refresh=False)
+		FileHelper.copy_with_pbar(file_path, target_path, pbar)
 
-		total_size = sum(f.stat().st_size for f in files_to_copy)
-
-		with tqdm(total=total_size, unit="iB", unit_scale=True, desc="Moving", unit_divisor=1024) as pbar:
-			for file_path in files_to_copy:
-				relative_path = file_path.relative_to(src_dir)
-				dest_dir = Path("./04_Output_RPYC")
-				target_path = dest_dir / relative_path
-
-				display_name = file_path.name[-32:].ljust(32)
-				pbar.set_postfix_str(display_name, refresh=False)
-				FileHelper.copy_with_pbar(file_path, target_path, pbar)
-
-				file_path.unlink()
+		file_path.unlink()
