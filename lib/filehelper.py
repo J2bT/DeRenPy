@@ -44,6 +44,7 @@ class FileHelper:
 			2. The `/game` subfolder of a Ren'Py game
 		:returns: a Path object to the `/game` subfolder or None if not found
 		"""
+
 		path = Path(user_input).resolve()
 
 		if not path.is_dir():
@@ -85,6 +86,7 @@ class FileHelper:
 		:param pbar: progress bar
 		:param block_size: how many bytes to copy between progress bar updates
 		"""
+
 		dst.parent.mkdir(parents=True, exist_ok=True)
 
 		with open(src, 'rb') as fsrc:
@@ -107,6 +109,7 @@ class FileHelper:
 		:param filename: RPA file to generate the extractor for
 		:return: a dict with the extractor and supplementary data
 		"""
+
 		extractor = {"extractor": UnRPA(filename,0,"./02_Output_RPA",)}
 
 		extractor["version"] = extractor["extractor"].detect_version()
@@ -124,6 +127,7 @@ class FileHelper:
 		:param pbar: progress bar
 		:return: True if extraction was successful, False otherwise
 		"""
+
 		if not Path(extractor["extractor"].path).is_dir():
 			Logger.error("Output directory does not exist or is not a directory.")
 			return False
@@ -158,6 +162,7 @@ class FileHelper:
 
 		:param root_path: directory to remove empty subfolders from
 		"""
+
 		# glob('**') finds all subdirectories; sorted by length descending
 		# ensures we process deepest directories first.
 		for p in sorted(root_path.glob('**/*'), key=lambda x: len(str(x)), reverse=True):
@@ -174,6 +179,7 @@ class FileHelper:
 		:param file: RPYC file to decompile
 		:param pbar: progress bar
 		"""
+
 		display_name = file.name[-32:].ljust(32)
 		pbar.set_postfix_str(display_name, refresh=False)
 		unrpyc.decompile_rpyc(file, unrpyc.Context())
@@ -187,6 +193,7 @@ class FileHelper:
 		:param root_dir: root for constructing a relative path in the output directory
 		:param pbar: progress bar
 		"""
+
 		relative_path = file_path.relative_to(root_dir)
 		dest_dir = Path("./04_Output_RPYC")
 		target_path = dest_dir / relative_path

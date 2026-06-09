@@ -48,6 +48,7 @@ def run_unrpa(args: argparse.Namespace) -> None:
 	Expects:
 		`args.files`: list of file paths (in strings)
 	"""
+	
 	args.files = set(args.files)
 
 	args.files = [f.strip() for f in args.files]
@@ -100,6 +101,7 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 				- A directory with RPYC files to decompile
 			- An empty list (will default to "['./03_Input_RPYC']")
 	"""
+
 	if len(args.files) == 0:
 		args.files.append("./03_Input_RPYC")
 
@@ -171,6 +173,7 @@ def run_pull(args: argparse.Namespace) -> None:
 			- 'rpyc'
 			- 'rpy'
 	"""
+
 	# Get a Path object pointing to /game subfolder
 	game_path = FileHelper.get_game_directory(args.game_path.strip())
 
@@ -215,6 +218,7 @@ def run_move(args: argparse.Namespace) -> None:
 			- 'rpyc'
 			- 'both'
 	"""
+
 	if args.file_type == "both":
 		extensions = {".rpy", ".rpyc"}
 	else:
@@ -252,6 +256,7 @@ def run_clean(args: argparse.Namespace) -> None:
 	Expects:
 		`args.assume_yes`: boolean value determining whether to prompt the user for confirmation
 	"""
+
 	if not args.assume_yes:
 		Logger.warning(
 			"You are about to delete all files in the following folders:\n"
