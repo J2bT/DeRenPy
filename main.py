@@ -86,10 +86,7 @@ def run_unrpa(args: argparse.Namespace) -> None:
 
 	extractors = [FileHelper.unrpa_generate_extractor(str(filename)) for filename in files_to_process]
 
-	total_files = 0
-
-	for extractor in extractors:
-		total_files += extractor["total_files"]
+	total_files = sum(extractor["total_files"] for extractor in extractors)
 
 	with tqdm(total=total_files, unit="files") as pbar:
 		for extractor in extractors:
