@@ -36,6 +36,9 @@ from lib.filehelper import FileHelper
 from lib.logger import Logger
 
 
+DERENPY_VERSION = "v2.1.0-dev"
+
+
 def pause() -> None:
 	"""Pause the application until Enter is pressed."""
 	Logger.info("Press Enter to return to the main menu.")
@@ -368,8 +371,8 @@ def interact(args: argparse.Namespace) -> None:
 def main() -> None:
 	"""Entry point of the application."""
 
-	parser = argparse.ArgumentParser(description='''
-	DeRenPy, a Ren'Py decompiler wrapper.
+	parser = argparse.ArgumentParser(description=f'''
+	DeRenPy {DERENPY_VERSION}.
 	Use -h flag for help!''')
 
 	subparsers = parser.add_subparsers(title="command", dest='command')
