@@ -112,7 +112,7 @@ If the RPYC file is in the `03_Input_RPYC` folder, path can be omitted. `.rpyc` 
 ### `pull` subcommand
 Usage: `main.py pull [-h] game_path [{rpa,rpyc,rpy}]`.
 
-Running without specifying a file type will default to pulling `.rpa` files.
+Running without specifying a file type will default to pulling RPA files.
 
 ### `move` subcommand
 Usage: `main.py move [-h] [{both,rpyc,rpy}]`.
