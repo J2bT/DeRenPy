@@ -117,10 +117,22 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 		input_path = Path(path)
 
 		# Case 1: Input is a Directory
+		resolved_dir = None
 		if input_path.is_dir():
-			for f in input_path.rglob("*.rpyc"):
+			resolved_dir = input_path
+		else:
+			if input_path.is_absolute():
+				resolved_dir = None
+			else:
+				fallback_path = Path("./03_Input_RPYC") / input_path
+				if fallback_path.is_dir():
+					resolved_dir = fallback_path
+
+		if resolved_dir:
+			resolved_dir = resolved_dir.resolve()
+			for f in resolved_dir.rglob("*.rpyc"):
 				if f.is_file():
-					files_to_process[f.resolve()] = input_path.resolve()
+					files_to_process[f.resolve()] = resolved_dir
 			continue
 
 		# Case 2: Input is a File
