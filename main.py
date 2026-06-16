@@ -138,7 +138,7 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 				break
 
 		if resolved_file:
-			files_to_process[resolved_file] = input_path.parent
+			files_to_process[resolved_file] = resolved_file.parent.resolve()
 		else:
 			display_name = path if path.endswith(".rpyc") else path + ".rpyc"
 			Logger.error(f"No such file: '{display_name}'.")
