@@ -5,7 +5,7 @@ A wrapper around "UnRPA" and "UnRPYC" open source utilities with a few other fun
 ***
 
 ## Getting Started
-**WARNING: Following instructions assume you have Python 3 and Git installed!**
+**WARNING: Following instructions assume you have Python 3.9+ and Git installed!**
 
 Start by cloning the repository with `git clone --recursive https://github.com/J2bT/DeRenPy`.
 
