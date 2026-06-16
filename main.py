@@ -36,7 +36,7 @@ from lib.filehelper import FileHelper
 from lib.logger import Logger
 
 
-DERENPY_VERSION = "v2.1.0-dev"
+DERENPY_VERSION = "v2.1.0"
 
 
 def pause() -> None:
