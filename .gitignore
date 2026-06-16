@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# auto-py-to-exe output folder
+output/
+
 # Environments
 .env
 .envrc
