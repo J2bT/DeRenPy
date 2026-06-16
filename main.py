@@ -36,6 +36,9 @@ from lib.filehelper import FileHelper
 from lib.logger import Logger
 
 
+DERENPY_VERSION = "v2.1.0"
+
+
 def pause() -> None:
 	"""Pause the application until Enter is pressed."""
 	Logger.info("Press Enter to return to the main menu.")
@@ -117,10 +120,22 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 		input_path = Path(path)
 
 		# Case 1: Input is a Directory
+		resolved_dir = None
 		if input_path.is_dir():
-			for f in input_path.rglob("*.rpyc"):
+			resolved_dir = input_path
+		else:
+			if input_path.is_absolute():
+				resolved_dir = None
+			else:
+				fallback_path = Path("./03_Input_RPYC") / input_path
+				if fallback_path.is_dir():
+					resolved_dir = fallback_path
+
+		if resolved_dir:
+			resolved_dir = resolved_dir.resolve()
+			for f in resolved_dir.rglob("*.rpyc"):
 				if f.is_file():
-					files_to_process[f.resolve()] = input_path.resolve()
+					files_to_process[f.resolve()] = resolved_dir
 			continue
 
 		# Case 2: Input is a File
@@ -138,7 +153,7 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 				break
 
 		if resolved_file:
-			files_to_process[resolved_file] = input_path.parent
+			files_to_process[resolved_file] = resolved_file.parent.resolve()
 		else:
 			display_name = path if path.endswith(".rpyc") else path + ".rpyc"
 			Logger.error(f"No such file: '{display_name}'.")
@@ -356,8 +371,8 @@ def interact(args: argparse.Namespace) -> None:
 def main() -> None:
 	"""Entry point of the application."""
 
-	parser = argparse.ArgumentParser(description='''
-	DeRenPy, a Ren'Py decompiler wrapper.
+	parser = argparse.ArgumentParser(description=f'''
+	DeRenPy {DERENPY_VERSION}.
 	Use -h flag for help!''')
 
 	subparsers = parser.add_subparsers(title="command", dest='command')

@@ -1,11 +1,15 @@
 # DeRenPy [![License](https://img.shields.io/github/license/J2bT/DeRenPy.svg)](https://github.com/J2bT/DeRenPy/blob/main/LICENSE)
 
+**Language**: [English](README.md) | [Русский](README_ru.md)
+
 A wrapper around "UnRPA" and "UnRPYC" open source utilities with a few other functions meant to speed up and simplify decompiling Ren'Py games.
+
+Windows users can now download a compiled executable from the [releases page](https://github.com/J2bT/DeRenPy/releases/latest)! If you do, skip the "Getting Started" section. You will need to run this executable instead of `main.py`.
 
 ***
 
 ## Getting Started
-**WARNING: Following instructions assume you have Python 3 and Git installed!**
+**WARNING: Following instructions assume you have Python 3.9+ and Git installed!**
 
 Start by cloning the repository with `git clone --recursive https://github.com/J2bT/DeRenPy`.
 
@@ -44,7 +48,7 @@ Just run the `main.py` file. (If this fails, run `python3 main.py` (Linux) or `p
 
 If you did NOT create a venv during installation, just double-clicking on the file in your file explorer will likely work.
 
-Note that interactive mode can't do some stuff pure CLI mode can. You can do everything, but with more steps involved. For example, you won't be able to decompress any .rpa files that are not in the `01_Input_RPA` folder, so you'll have to pull them first.
+Note that interactive mode can't do some stuff pure CLI mode can. You can do everything, but with more steps involved. For example, you won't be able to decompress any RPA files that are not in the `01_Input_RPA` folder, so you'll have to pull them first.
 
 ![main-menu](assets/main-menu.png)
 
@@ -72,19 +76,19 @@ Note that interactive mode can't do some stuff pure CLI mode can. You can do eve
 ![clean-1](assets/clean-1.png)
 
 ## Pure CLI mode
-DeRenPy has a usage guide built-in. Just run it with the `-h` flag. The examples below do NOT showcase all of the features.
+DeRenPy has a usage guide built-in. Just run it with the `-h` flag. The examples below do NOT showcase all the features.
 
 ```bash
-# Decompress a .rpa archive. Output will be in the `02_Output_RPA` folder.
+# Decompress an RPA archive. Output will be in the `02_Output_RPA` folder.
 main.py unrpa archive.rpa
 
-# Decompress a .rpyc compiled script. Output will be in the `04_Output_RPYC` folder.
+# Decompress an RPYC compiled script. Output will be in the `04_Output_RPYC` folder.
 main.py unrpyc script.rpyc
 
-# Copy all .rpa files from the game to `01_Input_RPA`. Can also copy .rpyc (to `03_Input_RPYC`) or .rpy (to `04_Output_RPYC`)
+# Copy all RPA files from the game to `01_Input_RPA`. Can also copy RPYC (to `03_Input_RPYC`) or RPY (to `04_Output_RPYC`) files
 main.py pull ~/Games/SomeVisualNovel rpa
 
-# Move all .rpyc files from `02_Output_RPA` to `03_Input_RPYC`. Can also move .rpy (to `04_Output_RPYC`) or both (to their respective folders).
+# Move all RPYC files from `02_Output_RPA` to `03_Input_RPYC`. Can also move RPY files (to `04_Output_RPYC`) or both (to their respective folders).
 main.py move rpyc
 
 # Delete all files from `01_Input_RPA`, `02_Output_RPA`, `03_Input_RPYC` and `04_Output_RPYC` folders.
@@ -94,28 +98,28 @@ main.py clean
 ### `unrpa` subcommand
 Usage: `main.py unrpa [-h] rpa_file [rpa_file ...]`.
 
-If the .rpa file is in the `01_Input_RPA` folder, path can be omitted. `.rpa` file extension can always be omitted.
+If the RPA file is in the `01_Input_RPA` folder, path can be omitted. `.rpa` file extension can always be omitted.
 
-Tip: running `main.py unrpa -h` will also show you the list of all .rpa files in the `01_Input_RPA` folder.
+Tip: running `main.py unrpa -h` will also show you the list of all RPA files in the `01_Input_RPA` folder.
 
 ### `unrpyc` subcommand
 Usage: `main.py unrpyc [-h] [rpyc_file ...]`.
 
-Running with no arguments will decompile all .rpyc files in the `03_Input_RPYC` folder.
+Running with no arguments will decompile all RPYC files in the `03_Input_RPYC` folder.
 
-You can pass a directory instead of a specific file. Doing so will decompile all .rpyc files in that directory.
+You can pass a directory instead of a specific file. Doing so will decompile all RPYC files in that directory.
 
-If the .rpyc file is in the `03_Input_RPYC` folder, path can be omitted. `.rpyc` file extension can always be omitted.
+If the RPYC file is in the `03_Input_RPYC` folder, path can be omitted. `.rpyc` file extension can always be omitted.
 
 ### `pull` subcommand
 Usage: `main.py pull [-h] game_path [{rpa,rpyc,rpy}]`.
 
-Running without specifying a file type will default to pulling `.rpa` files.
+Running without specifying a file type will default to pulling RPA files.
 
 ### `move` subcommand
 Usage: `main.py move [-h] [{both,rpyc,rpy}]`.
 
-Running with no arguments will move both `.rpy` and `.rpyc` files to their respective folders.
+Running with no arguments will move both RPY and RPYC files to their respective folders.
 
 ### `clean` subcommand
 Usage: `main.py clean [-h] [-y]`.
