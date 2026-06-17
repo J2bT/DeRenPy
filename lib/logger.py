@@ -1,17 +1,35 @@
+from tqdm import tqdm
+
+
 class Logger:
 	"""Class containing all the application's printing functions."""
 
 	@staticmethod
-	def error(string: str) -> None:
+	def error(string: str, pbar: tqdm | None = None) -> None:
 		"""Print an error message."""
-		print("\033[31mERROR: " + string + "\033[0m")
+		string = "\033[31mERROR: " + string + "\033[0m"
+
+		if pbar:
+			pbar.write(string)
+		else:
+			print(string)
 
 	@staticmethod
-	def info(string: str) -> None:
+	def info(string: str, pbar: tqdm | None = None) -> None:
 		"""Print an info message."""
-		print("\033[32mINFO: " + "\033[0m" + string)
+		string = "\033[32mINFO: " + "\033[0m" + string
+
+		if pbar:
+			pbar.write(string)
+		else:
+			print(string)
 
 	@staticmethod
-	def warning(string: str) -> None:
+	def warning(string: str, pbar: tqdm | None = None) -> None:
 		"""Print a warning message."""
-		print("\033[33mWARN: " + string + "\033[0m")
+		string = "\033[33mWARN: " + string + "\033[0m"
+
+		if pbar:
+			pbar.write(string)
+		else:
+			print(string)
