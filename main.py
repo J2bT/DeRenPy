@@ -105,7 +105,7 @@ def run_unrpa(args: argparse.Namespace) -> None:
 		for extractor in extractors:
 			pbar.write(f"Extracting: {extractor["extractor"].archive}")
 			if not FileHelper.unrpa_extract(extractor, pbar):   # Note: Condition with a side effect
-				pbar.write("\033[33mWARN: Unable to extract the file.\033[0m")	# Imitates `Logger.warn`
+				Logger.warning("Unable to extract the file.", pbar)
 
 
 def run_unrpyc(args: argparse.Namespace) -> None:
