@@ -120,17 +120,16 @@ class FileHelper:
 		return extractor
 
 	@staticmethod
-	def unrpa_extract(extractor: Extractor, pbar: tqdm) -> bool:
+	def unrpa_extract(extractor: Extractor, pbar: tqdm) -> None:
 		"""Extract an RPA archive.
 
 		:param extractor: dict with the extractor and supplementary data
 		:param pbar: progress bar
-		:return: True if extraction was successful, False otherwise
 		"""
 
 		if not Path(extractor["extractor"].path).is_dir():
 			Logger.error("Output directory does not exist or is not a directory.")
-			return False
+			return
 
 		with open(extractor["extractor"].archive, "rb") as archive:
 			for file_number, (path, data) in enumerate(extractor["index"].items()):
@@ -149,12 +148,12 @@ class FileHelper:
 					with open(os.path.join(extractor["extractor"].path, path), "wb") as output_file:
 						extractor["version"].postprocess(file_view, output_file)
 
-					pbar.update(1)
-
 				except:
-					return False
+					Logger.warning(f"Unable to extract the file: {path}, skipping...", pbar)
+					return
 
-		return True
+				pbar.update(1)
+
 
 	@staticmethod
 	def remove_empty_dirs(root_path: Path) -> None:
@@ -182,7 +181,12 @@ class FileHelper:
 
 		display_name = file.name[-32:].ljust(32)
 		pbar.set_postfix_str(display_name, refresh=False)
-		unrpyc.decompile_rpyc(file, unrpyc.Context())
+
+		try:
+			unrpyc.decompile_rpyc(file, unrpyc.Context())
+		except unrpyc.BadRpycException:	# Imitates `Logger.warning` which is not ideal
+			Logger.warning(f"Unable to decompile RPYC file: {str(file)}", pbar)
+
 		pbar.update(1)
 
 	@staticmethod

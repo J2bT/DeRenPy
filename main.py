@@ -36,7 +36,7 @@ from lib.filehelper import FileHelper
 from lib.logger import Logger
 
 
-DERENPY_VERSION = "v2.1.0"
+DERENPY_VERSION = "v3.0.0"
 
 
 def pause() -> None:
@@ -87,16 +87,24 @@ def run_unrpa(args: argparse.Namespace) -> None:
 			Logger.error(f"No such file: '{display_name}'.")
 			return
 
-	extractors = [FileHelper.unrpa_generate_extractor(str(filename)) for filename in files_to_process]
+	extractors = []
+	for filename in files_to_process:
+		try:
+			extractor = FileHelper.unrpa_generate_extractor(str(filename))
+			extractors.append(extractor)
+		except:
+			Logger.warning(f"Unable to generate extractor: {filename}, skipping...")
+
+	if len(extractors) == 0:
+		Logger.error("Nothing to extract.")
+		return
 
 	total_files = sum(extractor["total_files"] for extractor in extractors)
 
 	with tqdm(total=total_files, unit="files") as pbar:
 		for extractor in extractors:
-			pbar.write(f"Extracting: {extractor["extractor"].archive}")
-			if not FileHelper.unrpa_extract(extractor, pbar):   # Note: Condition with a side effect
-				Logger.error("Extraction failed.")
-				return
+			Logger.info(f"Extracting {extractor["extractor"].archive}", pbar)
+			FileHelper.unrpa_extract(extractor, pbar)
 
 
 def run_unrpyc(args: argparse.Namespace) -> None:
@@ -104,7 +112,7 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 
 	Expects:
 		`args.files`: one of:
-			- A list of paths (in strings) to one of:
+			- A list of paths (in strings) to at least one of:
 				- RPYC files to decompile
 				- A directory with RPYC files to decompile
 			- An empty list (will default to "['./03_Input_RPYC']")
@@ -169,15 +177,13 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 
 	Logger.info("Decompilation finished, moving decompiled files to the output folder.")
 
-	files_to_process = {file_path.with_suffix(".rpy"): source_dir for file_path, source_dir in files_to_process.items()}
+	files_to_process = {file_path.with_suffix(".rpy"): source_dir
+						for file_path, source_dir in files_to_process.items()
+						if file_path.with_suffix(".rpy").is_file()}
 
 	total_size = sum(f.stat().st_size for f in files_to_process.keys())
 	with tqdm(total=total_size, unit="iB", unit_scale=True, desc="Moving", unit_divisor=1024) as pbar:
 		for file_path, source_dir in files_to_process.items():
-			if not file_path.exists():
-				Logger.warning(f"File does not exist: {file_path}, skipping...")
-				return
-
 			FileHelper.unrpyc_final_move(file_path, source_dir, pbar)
 
 
