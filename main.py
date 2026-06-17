@@ -87,7 +87,17 @@ def run_unrpa(args: argparse.Namespace) -> None:
 			Logger.error(f"No such file: '{display_name}'.")
 			return
 
-	extractors = [FileHelper.unrpa_generate_extractor(str(filename)) for filename in files_to_process]
+	extractors = []
+	for filename in files_to_process:
+		try:
+			extractor = FileHelper.unrpa_generate_extractor(str(filename))
+			extractors.append(extractor)
+		except:
+			Logger.warning(f"Unable to generate extractor: {filename}.")
+
+	if len(extractors) == 0:
+		Logger.error("Nothing to extract.")
+		return
 
 	total_files = sum(extractor["total_files"] for extractor in extractors)
 
@@ -95,8 +105,7 @@ def run_unrpa(args: argparse.Namespace) -> None:
 		for extractor in extractors:
 			pbar.write(f"Extracting: {extractor["extractor"].archive}")
 			if not FileHelper.unrpa_extract(extractor, pbar):   # Note: Condition with a side effect
-				Logger.error("Extraction failed.")
-				return
+				pbar.write("\033[33mWARN: Unable to extract the file.\033[0m")	# Imitates `Logger.warn`
 
 
 def run_unrpyc(args: argparse.Namespace) -> None:
