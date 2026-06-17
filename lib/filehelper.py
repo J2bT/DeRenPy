@@ -184,7 +184,7 @@ class FileHelper:
 
 		try:
 			unrpyc.decompile_rpyc(file, unrpyc.Context())
-		except unrpyc.BadRpycException:	# Imitates `Logger.warning` which is not ideal
+		except unrpyc.BadRpycException:
 			Logger.warning(f"Unable to decompile RPYC file: {str(file)}", pbar)
 
 		pbar.update(1)
