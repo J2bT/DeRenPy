@@ -149,7 +149,8 @@ class FileHelper:
 						extractor["version"].postprocess(file_view, output_file)
 
 				except:
-					Logger.warning(f"Unable to extract the file: {path}, skipping...", pbar)
+					Logger.warning(f"Unable to extract the file: {path}\n" +
+								   "It is likely this archive is corrupted, skipping...", pbar)
 					return
 
 				pbar.update(1)
