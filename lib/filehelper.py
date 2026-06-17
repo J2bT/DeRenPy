@@ -182,7 +182,12 @@ class FileHelper:
 
 		display_name = file.name[-32:].ljust(32)
 		pbar.set_postfix_str(display_name, refresh=False)
-		unrpyc.decompile_rpyc(file, unrpyc.Context())
+
+		try:
+			unrpyc.decompile_rpyc(file, unrpyc.Context())
+		except unrpyc.BadRpycException:	# Imitates `Logger.warning` which is not ideal
+			pbar.write(f"\033[33mWARN: Unable to decompile RPYC file: {str(file)}\033[0m")
+
 		pbar.update(1)
 
 	@staticmethod

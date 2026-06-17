@@ -169,15 +169,13 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 
 	Logger.info("Decompilation finished, moving decompiled files to the output folder.")
 
-	files_to_process = {file_path.with_suffix(".rpy"): source_dir for file_path, source_dir in files_to_process.items()}
+	files_to_process = {file_path.with_suffix(".rpy"): source_dir
+						for file_path, source_dir in files_to_process.items()
+						if file_path.with_suffix(".rpy").is_file()}
 
 	total_size = sum(f.stat().st_size for f in files_to_process.keys())
 	with tqdm(total=total_size, unit="iB", unit_scale=True, desc="Moving", unit_divisor=1024) as pbar:
 		for file_path, source_dir in files_to_process.items():
-			if not file_path.exists():
-				Logger.warning(f"File does not exist: {file_path}, skipping...")
-				continue
-
 			FileHelper.unrpyc_final_move(file_path, source_dir, pbar)
 
 
