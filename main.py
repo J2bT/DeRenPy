@@ -104,7 +104,7 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 
 	Expects:
 		`args.files`: one of:
-			- A list of paths (in strings) to one of:
+			- A list of paths (in strings) to at least one of:
 				- RPYC files to decompile
 				- A directory with RPYC files to decompile
 			- An empty list (will default to "['./03_Input_RPYC']")
