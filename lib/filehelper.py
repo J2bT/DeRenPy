@@ -120,17 +120,16 @@ class FileHelper:
 		return extractor
 
 	@staticmethod
-	def unrpa_extract(extractor: Extractor, pbar: tqdm) -> bool:
+	def unrpa_extract(extractor: Extractor, pbar: tqdm) -> None:
 		"""Extract an RPA archive.
 
 		:param extractor: dict with the extractor and supplementary data
 		:param pbar: progress bar
-		:return: True if extraction was successful, False otherwise
 		"""
 
 		if not Path(extractor["extractor"].path).is_dir():
 			Logger.error("Output directory does not exist or is not a directory.")
-			return False
+			return
 
 		with open(extractor["extractor"].archive, "rb") as archive:
 			for file_number, (path, data) in enumerate(extractor["index"].items()):
@@ -149,12 +148,12 @@ class FileHelper:
 					with open(os.path.join(extractor["extractor"].path, path), "wb") as output_file:
 						extractor["version"].postprocess(file_view, output_file)
 
-					pbar.update(1)
-
 				except:
-					return False
+					Logger.warning(f"Unable to extract the file: {path}, skipping...", pbar)
+					return
 
-		return True
+				pbar.update(1)
+
 
 	@staticmethod
 	def remove_empty_dirs(root_path: Path) -> None:

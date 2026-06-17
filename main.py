@@ -103,9 +103,8 @@ def run_unrpa(args: argparse.Namespace) -> None:
 
 	with tqdm(total=total_files, unit="files") as pbar:
 		for extractor in extractors:
-			pbar.write(f"Extracting: {extractor["extractor"].archive}")
-			if not FileHelper.unrpa_extract(extractor, pbar):   # Note: Condition with a side effect
-				Logger.warning("Unable to extract the file.", pbar)
+			Logger.info(f"Extracting {extractor["extractor"].archive}", pbar)
+			FileHelper.unrpa_extract(extractor, pbar)
 
 
 def run_unrpyc(args: argparse.Namespace) -> None:
