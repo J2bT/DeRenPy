@@ -176,7 +176,7 @@ def run_unrpyc(args: argparse.Namespace) -> None:
 		for file_path, source_dir in files_to_process.items():
 			if not file_path.exists():
 				Logger.warning(f"File does not exist: {file_path}, skipping...")
-				return
+				continue
 
 			FileHelper.unrpyc_final_move(file_path, source_dir, pbar)
 
