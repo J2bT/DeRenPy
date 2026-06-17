@@ -93,7 +93,7 @@ def run_unrpa(args: argparse.Namespace) -> None:
 			extractor = FileHelper.unrpa_generate_extractor(str(filename))
 			extractors.append(extractor)
 		except:
-			Logger.warning(f"Unable to generate extractor: {filename}.")
+			Logger.warning(f"Unable to generate extractor: {filename}, skipping...")
 
 	if len(extractors) == 0:
 		Logger.error("Nothing to extract.")
