@@ -132,7 +132,12 @@ class FileHelper:
 			return
 
 		with open(extractor["extractor"].archive, "rb") as archive:
+			unrpa_error = False
 			for file_number, (path, data) in enumerate(extractor["index"].items()):
+				if unrpa_error:
+					pbar.update(1)
+					continue
+
 				try:
 					display_name = path[-32:].ljust(32)
 					pbar.set_postfix_str(display_name, refresh=False)
@@ -148,11 +153,12 @@ class FileHelper:
 					with open(os.path.join(extractor["extractor"].path, path), "wb") as output_file:
 						extractor["version"].postprocess(file_view, output_file)
 
-				except:
-					Logger.warning(f"Unable to extract the file: {path}, skipping...", pbar)
-					return
+					pbar.update(1)
 
-				pbar.update(1)
+				except:
+					Logger.warning(f"Unable to extract the file: {path}\n" +
+								   "It is likely this archive is corrupted, skipping...", pbar)
+					unrpa_error = True
 
 
 	@staticmethod
@@ -184,7 +190,7 @@ class FileHelper:
 
 		try:
 			unrpyc.decompile_rpyc(file, unrpyc.Context())
-		except unrpyc.BadRpycException:	# Imitates `Logger.warning` which is not ideal
+		except unrpyc.BadRpycException:
 			Logger.warning(f"Unable to decompile RPYC file: {str(file)}", pbar)
 
 		pbar.update(1)
