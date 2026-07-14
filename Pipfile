@@ -18,4 +18,4 @@ build = "~=1.5.1"
 python_version = "3.14"
 
 [scripts]
-cli = "python ./derenpy.py"
+cli = "python ./deren.py"
