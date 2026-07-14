@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # DeRenPy
 #
 # Copyright (C) 2026 J2bT
@@ -23,5 +21,3 @@ def main():
     pass
 
 
-if __name__ == "__main__":
-    main()
