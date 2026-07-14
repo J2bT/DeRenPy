@@ -1,0 +1,3 @@
+[submodule "derenpy/unrpyc"]
+	path = derenpy/unrpyc
+	url = https://github.com/CensoredUsername/unrpyc.git

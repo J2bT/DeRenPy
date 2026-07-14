@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling", "hatch-requirements-txt"]
+build-backend = "hatchling.build"
+
+[project]
+name = "derenpy"
+description = "A wrapper around \"UnRPA\" and \"UnRPYC\" open source utilities with a few other functions meant to speed up and simplify decompiling Ren'Py games."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+dynamic = ["dependencies", "version"]
+authors = [
+    { name = "J2bT" }
+]
+
+[project.urls]
+Documentation = "https://github.com/J2bT/DeRenPy#readme"
+Issues = "https://github.com/J2bT/DeRenPy/issues"
+Source = "https://github.com/J2bT/DeRenPy"
+
+[project.scripts]
+derenpy = "derenpy.__main__:main"
+
+[tool.hatch.version]
+path = "derenpy/__init__.py"
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.pylint.MAIN]
+ignore-paths = [
+    "^tests/.*$",
+    "^derenpy/unrpyc/.*$",
+]
+py-version = "3.10"
+source-roots = ["derenpy"]
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "too-many-instance-attributes",
+    "too-many-arguments",
+    "too-many-public-methods",
+    "raw-checker-failed",
+    "bad-inline-option",
+    "locally-disabled",
+    "file-ignored",
+    "suppressed-message",
+    "useless-suppression",
+    "deprecated-pragma",
+    "use-symbolic-message-instead",
+    "use-implicit-booleaness-not-comparison-to-string",
+    "use-implicit-booleaness-not-comparison-to-zero",
+]
+
+[tool.pylint.SIMILARITIES]
+min-similarity-lines = 10

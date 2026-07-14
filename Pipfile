@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+inquirerpy = "~=0.3.4"
+tqdm = "~=4.68.4"
+unrpa = "~=2.3.0"
+
+[dev-packages]
+pytest = "~=9.1.1"
+pylint = "~=4.0.6"
+autopep8 = "~=2.3.2"
+build = "~=1.5.1"
+
+[requires]
+python_version = "3.14"
+
+[scripts]
+cli = "python ./derenpy.py"
