@@ -7,8 +7,13 @@ case "$1" in
         python -m build
         ;;
 
+    executable)
+        echo "Not implemented!"
+        exit 1
+        ;;
+
     *)
-        echo "Usage: $0 package"
+        echo "Usage: pipenv run build {package|executable}"
         exit 1
         ;;
 esac
