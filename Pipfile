@@ -11,8 +11,9 @@ unrpa = "~=2.3.0"
 [dev-packages]
 pytest = "~=9.1.1"
 pylint = "~=4.0.6"
-autopep8 = "~=2.3.2"
 build = "~=1.5.1"
+babel = "~=2.18.0"
+pyinstaller = "~=6.21.0"
 
 [requires]
 python_version = "3.14"
