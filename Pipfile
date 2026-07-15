@@ -19,3 +19,4 @@ python_version = "3.14"
 
 [scripts]
 cli = "python ./deren.py"
+build = "bash ./scripts/pipenv-runnable/build.sh"
