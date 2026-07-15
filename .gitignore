@@ -52,8 +52,9 @@ venv.bak/
 # PyCharm
 .idea/
 
-# requirements.txt is regenerated from Pipfile on every package build
+# Build artifacts
 requirements.txt
+locales/
 
 # DeRenPy folders
 01_Input_RPA/
