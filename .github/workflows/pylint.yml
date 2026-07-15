@@ -21,4 +21,5 @@ jobs:
         pipenv sync --dev
     - name: Run tests
       run: |
+        cd derenpy
         pipenv run pylint derenpy
